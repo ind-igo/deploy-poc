@@ -1,0 +1,44 @@
+mainnet:
+  dai:
+    factory: erc20
+  frax:
+    factory: erc20
+  ohm:
+    factory: OlympusERC20Token
+  sOhm:
+    factory: sOlympus
+  staking:
+    factory: OlympusStaking
+    params:
+      - ${{ ohm }}
+      - ${{ sOhm }}
+      - 2200
+      - 1
+      - 9
+    # TODO dependencies should be automatically parsed from the params
+    depends_on:
+      - ohm
+      - sOhm
+  treasury:
+    factory: OlympusTreasury
+    params:
+      - ${{ ohm }}
+      - ${{ dai }}
+      - ${{ frax }}
+      - 1
+    depends_on:
+      - ohm
+      - dai
+      - frax
+  - name: distributor
+    factory: Distributor
+    params:
+      - ${{ treasury }}
+      - ${{ ohm }}
+      - 10
+      - 1
+    depends_on:
+      - treasury
+      - ohm
+
+
